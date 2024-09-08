@@ -44,6 +44,19 @@ class DatabaseManager:
             conn.execute('INSERT INTO users VALUES (?, ?)', (user_id, user_name))
             conn.commit()
 
+    def get_winners_img(self, user_id):
+        conn = sqlite3.connect(self.database)
+        with conn:
+            cur = conn.cursor()
+            cur.execute(''' 
+            SELECT image FROM winners 
+            INNER JOIN prizes ON 
+            winners.prize_id = prizes.prize_id
+            WHERE user_id = ?''', (user_id, ))
+            return cur.fetchall()
+
+
+
     def add_prize(self, data):
         conn = sqlite3.connect(self.database)
         with conn:
